@@ -40,4 +40,6 @@ sshpass -p "$login_password" ssh root@$next_ip <<EOF
 apt update
 apt upgrade -y
 apt install curl -y
+sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+service ssh restart
 EOF
