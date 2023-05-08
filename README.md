@@ -1,65 +1,58 @@
-# Proxmox Container Creation Script
+# README
 
-This script automates the creation of a new Proxmox Container (CT) using a specified template, storage, CPU and memory allocation, and network settings. 
-
-It also automatically selects the next available IP address based on the previous container's IP address.
-
-installs the curl package, modifies the SSH configuration to allow root login with a password, and restarts the SSH service.
-
-## Requirements
-
-- Proxmox VE installation
-- `sshpass` package installed on the machine running the script (e.g. `sudo apt install sshpass`)
+This is a Bash script that automates the creation of a new Proxmox container based on a Debian template. The script allows you to configure various parameters, such as the container's hostname, the amount of CPU cores, memory, and disk space, the location of the template file, and the storage location for the container. Additionally, the script applies updates, installs curl, and enables root login via SSH on the new container.
 
 ## Usage
 
-1. Copy the contents of the script into a file and save it with a `.sh` file extension (e.g. `create-container.sh`).
-2. Set the value of the `password` variable to the desired password for the container.
-3. Run the script with `sudo` or as the root user: `sudo ./create-container.sh`
-4. The script will prompt for the container's hostname, and then create the container using the specified settings.
-5. After the container is started, the script will prompt for the root password to log in to the container, and then automatically run the `apt update && apt upgrade -y && apt install curl` command.
+To use the script, follow these steps:
 
-Note: The script assumes that the `vmbr0` bridge is used for the container's network interface. If a different bridge is used, update the `network` variable accordingly.
+1. Copy the script to your Proxmox host, and make it executable by running `chmod +x script_name.sh`.
 
-## Script settings
+2. Open the script in a text editor and modify the variables to match your requirements. The variables are defined at the top of the script, and you can change their values to suit your needs. 
 
-The following variables can be adjusted in the script:
+3. Save the changes you made to the script.
 
-- `password`: The password for the container's root user.
-- `template`: The name of the template to use for the container. Defaults to `debian-11-standard_11.6-1_amd64.tar.zst`.
-- `storage`: The name of the storage to use for the container's disk. Defaults to `local-lvm`.
-- `disk_size`: The size of the container's root filesystem. Defaults to `10G`.
-- `cpu_count`: The number of virtual CPUs to allocate to the container. Defaults to `1`.
-- `ram_size`: The amount of RAM to allocate to the container, in MB. Defaults to `512`.
-- `network`: The name of the bridge to use for the container's network interface. Defaults to `vmbr0`.
-- `ipv4_subnet`: The IPv4 subnet to use for the container's network interface, in CIDR notation. Defaults to `192.168.1.1/24`.
-- `ipv6_subnet`: The IPv6 subnet to use for the container's network interface, in CIDR notation. Defaults to `Ffff:c0a8:101::/64`.
-- `dns_servers`: A space-separated list of DNS server IP addresses to use for the container. Defaults to `8.8.8.8 8.8.4.4`.
+4. Run the script by running `./script_name.sh`.
 
+5. When prompted, enter the hostname for the new container.
 
-## Troubleshooting
+6. Wait for the script to complete. When it's done, it will print a message indicating that the container has been created, and updates have been applied.
 
-If the script fails with a message indicating that `sshpass` is not installed, install it using the command: `sudo apt install sshpass`. 
+## Variables
 
-If the script fails with a message indicating that the specified storage or template cannot be found, verify that the storage or template name is correct and exists on the Proxmox server.
+The following variables can be modified to customize the behavior of the script:
 
-If the script fails with a message indicating that the container could not be started or accessed via SSH, check the Proxmox server logs for any errors that may have occurred during the container creation process.
+- `TEMPLATE_LOCATION`: The location of the template file. By default, it is set to `/mnt/pve/Backup/template/cache`.
 
-## Modifying the Script
+- `TEMPLATE_FILE`: The name of the template file. By default, it is set to `debian-11-standard_11.6-1_amd64.tar.zst`.
 
-If you don't want to modify the SSH configuration to allow root login with a password, you can disable this part of the script by commenting out the following lines:
-```
-sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
-```
-```
-service ssh restart
-```
-To comment out a line in Bash, simply add a # character at the beginning of the line.
+- `PASSWORD`: The password for the new container's root user.
 
-## Disclaimer
+- `CORES`: The number of CPU cores to allocate to the new container. By default, it is set to 1.
 
-Use this script at your own risk. The author is not responsible for any damage caused by the use or misuse of this script.
+- `MEMORY`: The amount of memory (in MB) to allocate to the new container. By default, it is set to 512.
 
-## License
+- `DISK_SPACE`: The amount of disk space to allocate to the new container. By default, it is set to `10G`.
 
-This script is released under the MIT License. See LICENSE for details.
+- `STORAGE_DISK`: The name of the storage disk to use for the new container. By default, it is set to `Storage`.
+
+## 
+Changing the storage location:
+The --storage option in the pct create command specifies the storage location where the container's disk image will be stored. To change the storage location, edit the STORAGE_DISK variable in the script. For example, if you want to use a storage location named my-storage, change the line to:
+
+makefile
+
+STORAGE_DISK=my-storage
+
+Changing the disk space:
+The --rootfs option in the pct create command specifies the disk space allocated to the container's root file system. To change the disk space, edit the DISK_SPACE variable in the script. The value should be in the format size[unit], where size is a positive integer and unit is a letter representing the size unit (e.g. M for megabytes, G for gigabytes, etc.). For example, if you want to allocate 20 gigabytes of disk space, change the line to:
+
+makefile
+
+    DISK_SPACE=20
+
+Once you have made the changes, save the script and run it. The new container will be created with the specified storage location and disk space.
+
+## Note
+
+This script assumes that you have a valid Proxmox environment set up, and that you have the necessary permissions to create containers. Additionally, this script does not perform any error handling or input validation, so use it at your own risk.
