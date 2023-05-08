@@ -1,10 +1,10 @@
-Is a work in progrese. please let me know if any errors happen or if something doesn't work. 
-
 # Proxmox Container Creation Script
 
 This script automates the creation of a new Proxmox Container (CT) using a specified template, storage, CPU and memory allocation, and network settings. 
 
 It also automatically selects the next available IP address based on the previous container's IP address.
+
+installs the curl package, modifies the SSH configuration to allow root login with a password, and restarts the SSH service.
 
 ## Requirements
 
@@ -36,6 +36,7 @@ The following variables can be adjusted in the script:
 - `ipv6_subnet`: The IPv6 subnet to use for the container's network interface, in CIDR notation. Defaults to `Ffff:c0a8:101::/64`.
 - `dns_servers`: A space-separated list of DNS server IP addresses to use for the container. Defaults to `8.8.8.8 8.8.4.4`.
 
+
 ## Troubleshooting
 
 If the script fails with a message indicating that `sshpass` is not installed, install it using the command: `sudo apt install sshpass`. 
@@ -43,3 +44,22 @@ If the script fails with a message indicating that `sshpass` is not installed, i
 If the script fails with a message indicating that the specified storage or template cannot be found, verify that the storage or template name is correct and exists on the Proxmox server.
 
 If the script fails with a message indicating that the container could not be started or accessed via SSH, check the Proxmox server logs for any errors that may have occurred during the container creation process.
+
+## Modifying the Script
+
+If you don't want to modify the SSH configuration to allow root login with a password, you can disable this part of the script by commenting out the following lines:
+```
+sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+```
+```
+service ssh restart
+```
+To comment out a line in Bash, simply add a # character at the beginning of the line.
+
+## Disclaimer
+
+Use this script at your own risk. The author is not responsible for any damage caused by the use or misuse of this script.
+
+## License
+
+This script is released under the MIT License. See LICENSE for details.
