@@ -45,7 +45,6 @@ STORAGE_DISK=my-storage
 Changing the disk space:
 The --rootfs option in the pct create command specifies the disk space allocated to the container's root file system. To change the disk space, edit the DISK_SPACE variable in the script. The value should be in the format size[unit], where size is a positive integer and unit is a letter representing the size unit (e.g. M for megabytes, G for gigabytes, etc.). For example, if you want to allocate 20 gigabytes of disk space, change the line to:
 
-makefile
 
     DISK_SPACE=20
 
