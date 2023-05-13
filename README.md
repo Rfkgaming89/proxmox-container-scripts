@@ -40,7 +40,6 @@ The following variables can be modified to customize the behavior of the script:
 Changing the storage location:
 The --storage option in the pct create command specifies the storage location where the container's disk image will be stored. To change the storage location, edit the STORAGE_DISK variable in the script. For example, if you want to use a storage location named my-storage, change the line to:
 
-
 STORAGE_DISK=my-storage
 
 Changing the disk space:
