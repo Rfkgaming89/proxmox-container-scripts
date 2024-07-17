@@ -19,8 +19,7 @@ NEW_CT_NUM=$((LAST_CT_NUM + 1))
 read -p "Enter hostname for new container: " HOSTNAME
 
 # Create new container
-pct create $NEW_CT_NUM $TEMPLATE_LOCATION/$TEMPLATE_FILE --hostname $HOSTNAME --password $PASSWORD --cores $CORES --memory $MEMORY --storage $STORAGE_DISK --rootfs $STORAGE_DISK:10 --onboot 1
-
+pct create $NEW_CT_NUM $TEMPLATE_LOCATION/$TEMPLATE_FILE --hostname $HOSTNAME --password $PASSWORD --cores $CORES --memory $MEMORY --storage $STORAGE_DISK --rootfs $STORAGE_DISK:$DISK_SPACE --onboot 1
 # Enable keyctl
 pct set $NEW_CT_NUM --keyctl yes
 
